@@ -18,7 +18,6 @@
       --error: #dc2626;
       --error-bg: #fef2f2;
       --success: #16a34a;
-      --success-bg: #f0fdf4;
     }
 
     * {
@@ -53,7 +52,6 @@
       display: none !important;
     }
 
-    /* Login View */
     .lock-badge {
       width: 48px;
       height: 48px;
@@ -144,6 +142,13 @@
       background: #ffffff !important;
     }
 
+    #recaptcha-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+      min-height: 78px;
+    }
+
     .btn {
       width: 100%;
       padding: 13px 18px;
@@ -190,6 +195,7 @@
       font-size: 0.85rem;
       margin-bottom: 16px;
       text-align: center;
+      word-break: break-word;
     }
 
     .alert-error {
@@ -204,7 +210,6 @@
       border: 1px solid #bfdbfe;
     }
 
-    /* Protected Content View */
     .message-box {
       background: #f8fafc;
       border: 1px solid var(--border);
@@ -220,7 +225,6 @@
       white-space: pre-line;
     }
 
-    /* Poll Box */
     .poll-box {
       border: 1.5px solid var(--border);
       border-radius: 16px;
@@ -283,15 +287,15 @@
     }
 
     .saved-votes {
-      margin-top: 10px;
+      margin-top: 12px;
       padding-top: 10px;
       border-top: 1px dashed var(--border);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-secondary);
       text-align: center;
+      line-height: 1.5;
     }
 
-    /* Instagram CTA */
     .insta-btn {
       display: flex;
       align-items: center;
@@ -357,7 +361,8 @@
             <input type="tel" id="phone-input" placeholder="Enter 10-digit number" maxlength="14" autocomplete="tel" />
           </div>
         </div>
-        <button id="send-otp-btn" class="btn btn-primary">Send OTP</button>
+        <div id="recaptcha-container"></div>
+        <button type="button" id="send-otp-btn" class="btn btn-primary">Send OTP</button>
       </div>
 
       <!-- OTP Verification Step -->
@@ -366,11 +371,9 @@
           <label for="otp-input">Enter 6-Digit OTP</label>
           <input type="text" id="otp-input" class="otp-input" placeholder="••••••" maxlength="6" inputmode="numeric" />
         </div>
-        <button id="verify-otp-btn" class="btn btn-primary">Verify & Open</button>
-        <button id="change-number-btn" class="link-btn">Change mobile number</button>
+        <button type="button" id="verify-otp-btn" class="btn btn-primary">Verify & Open</button>
+        <button type="button" id="change-number-btn" class="link-btn">Change mobile number</button>
       </div>
-
-      <div id="recaptcha-container"></div>
     </div>
 
     <!-- STEP 2: PROTECTED CONTENT -->
@@ -384,8 +387,8 @@
         <div class="poll-label">Quick Poll</div>
         <div class="poll-question">Do you have a boyfriend?</div>
         <div class="poll-options">
-          <button type="button" class="poll-btn" id="btn-yes" data-choice="Yes">Yes</button>
-          <button type="button" class="poll-btn" id="btn-no" data-choice="No">No</button>
+          <button type="button" class="poll-btn" id="btn-yes">Yes</button>
+          <button type="button" class="poll-btn" id="btn-no">No</button>
         </div>
         <div id="poll-status" class="poll-status hidden"></div>
         <div id="saved-votes" class="saved-votes hidden"></div>
@@ -406,27 +409,22 @@
   </div>
 
   <script type="module">
-    // =========================================================================
-    // 1. ALLOWED NUMBERS (Strict Whitelist)
-    // =========================================================================
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
     const ALLOWED_NUMBERS = ['+919391873289', '+919912824043'];
 
-    // =========================================================================
-    // 2. FIREBASE CONFIG (Paste your Firebase config below for Real SMS OTP)
-    // Leave as "YOUR_API_KEY" to run in instant Demo/Test OTP mode.
-    // =========================================================================
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyA2f1afEdlY5mATUF_spUSPpNvFrnXJXBc",
+      authDomain: "teju-reply.firebaseapp.com",
+      projectId: "teju-reply",
+      storageBucket: "teju-reply.firebasestorage.app",
+      messagingSenderId: "554616281555",
+      appId: "1:554616281555:web:68d8b7df41c4657222f726",
+      measurementId: "G-JY0KX7SGN3"
     };
 
-    const isFirebaseReady = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
-
-    // UI Elements
     const loginView = document.getElementById('login-view');
     const contentView = document.getElementById('content-view');
     const phoneStep = document.getElementById('phone-step');
@@ -444,11 +442,10 @@
     const savedVotesEl = document.getElementById('saved-votes');
 
     let currentPhone = '';
-    let demoOtpCode = '';
     let confirmationResult = null;
     let auth = null;
     let db = null;
-    let firestoreFns = null;
+    let recaptchaReady = false;
 
     function showAlert(msg, type = 'error') {
       alertBox.textContent = msg;
@@ -467,26 +464,7 @@
       return raw.trim();
     }
 
-    // Initialize Firebase if configured
-    async function initFirebase() {
-      if (!isFirebaseReady) return;
-      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-      const { getAuth, RecaptchaVerifier, signInWithPhoneNumber, signOut } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-      const { getFirestore, doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
-      firestoreFns = { doc, setDoc, getDoc, signInWithPhoneNumber, signOut };
-
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible'
-      });
-    }
-
-    await initFirebase();
-
-    // Send OTP Handler
+    // Attach all button listeners immediately
     sendOtpBtn.addEventListener('click', async () => {
       hideAlert();
       const formatted = normalizeIndianNumber(phoneInput.value);
@@ -496,30 +474,29 @@
         return;
       }
 
+      if (!auth || !recaptchaReady) {
+        showAlert('Security check is still loading or blocked. Check that pardhu-padala.github.io is added to Firebase Authorized Domains, then refresh.', 'error');
+        return;
+      }
+
       currentPhone = formatted;
       sendOtpBtn.disabled = true;
       sendOtpBtn.textContent = 'Sending OTP...';
 
       try {
-        if (isFirebaseReady) {
-          confirmationResult = await firestoreFns.signInWithPhoneNumber(auth, currentPhone, window.recaptchaVerifier);
-          showAlert(`OTP sent via SMS to ${currentPhone}`, 'info');
-        } else {
-          demoOtpCode = String(Math.floor(100000 + Math.random() * 900000));
-          showAlert(`Test Mode OTP for ${currentPhone}: ${demoOtpCode}`, 'info');
-        }
+        confirmationResult = await signInWithPhoneNumber(auth, currentPhone, window.recaptchaVerifier);
+        showAlert(`OTP sent via SMS to ${currentPhone}`, 'info');
         phoneStep.classList.add('hidden');
         otpStep.classList.remove('hidden');
         otpInput.focus();
       } catch (err) {
-        showAlert('Failed to send OTP: ' + (err.message || 'Please try again.'), 'error');
+        showAlert('OTP Error: ' + (err.code || err.message || 'Could not send OTP.'), 'error');
       } finally {
         sendOtpBtn.disabled = false;
         sendOtpBtn.textContent = 'Send OTP';
       }
     });
 
-    // Verify OTP Handler
     verifyOtpBtn.addEventListener('click', async () => {
       hideAlert();
       const code = otpInput.value.trim();
@@ -533,14 +510,8 @@
       verifyOtpBtn.textContent = 'Verifying...';
 
       try {
-        if (isFirebaseReady) {
-          await confirmationResult.confirm(code);
-        } else {
-          if (code !== demoOtpCode) {
-            throw new Error('Invalid OTP code.');
-          }
-        }
-        unlockWebsite();
+        await confirmationResult.confirm(code);
+        await unlockWebsite();
       } catch (err) {
         showAlert('Incorrect OTP. Please check and try again.', 'error');
       } finally {
@@ -556,7 +527,6 @@
       phoneStep.classList.remove('hidden');
     });
 
-    // Unlock Page & Load Poll State
     async function unlockWebsite() {
       loginView.classList.add('hidden');
       contentView.classList.remove('hidden');
@@ -569,32 +539,25 @@
     }
 
     async function loadPollState() {
-      if (isFirebaseReady && db) {
-        try {
-          const snap = await firestoreFns.getDoc(firestoreFns.doc(db, 'poll', 'responses'));
-          if (snap.exists()) {
-            const data = snap.data();
-            if (data[currentPhone]) {
-              highlightChoice(data[currentPhone]);
-              pollStatus.textContent = `Your recorded answer: ${data[currentPhone]}`;
-              pollStatus.classList.remove('hidden');
-            }
-            const entries = Object.entries(data);
-            if (entries.length > 0) {
-              savedVotesEl.textContent = 'Recorded responses: ' + entries.map(([num, ans]) => `${num}: ${ans}`).join(' | ');
-              savedVotesEl.classList.remove('hidden');
-            }
+      if (!db) return;
+      try {
+        const snap = await getDoc(doc(db, 'poll', 'responses'));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data[currentPhone]) {
+            highlightChoice(data[currentPhone]);
+            pollStatus.textContent = `Your recorded answer: ${data[currentPhone]}`;
+            pollStatus.classList.remove('hidden');
           }
-        } catch (e) {
-          console.error(e);
+          const entries = Object.entries(data);
+          if (entries.length > 0) {
+            savedVotesEl.innerHTML = '<strong>Recorded responses:</strong><br>' +
+              entries.map(([num, ans]) => `${num}: <strong>${ans}</strong>`).join('<br>');
+            savedVotesEl.classList.remove('hidden');
+          }
         }
-      } else {
-        const saved = localStorage.getItem('poll_vote_' + currentPhone);
-        if (saved) {
-          highlightChoice(saved);
-          pollStatus.textContent = `Your recorded answer: ${saved}`;
-          pollStatus.classList.remove('hidden');
-        }
+      } catch (e) {
+        console.error(e);
       }
     }
 
@@ -603,21 +566,16 @@
       pollStatus.textContent = `Saving "${choice}"...`;
       pollStatus.classList.remove('hidden');
 
-      if (isFirebaseReady && db) {
-        try {
-          await firestoreFns.setDoc(
-            firestoreFns.doc(db, 'poll', 'responses'),
-            { [currentPhone]: choice },
-            { merge: true }
-          );
-          pollStatus.textContent = `Response saved: ${choice}`;
-          await loadPollState();
-        } catch (err) {
-          pollStatus.textContent = 'Could not save to cloud. Check Firestore rules.';
-        }
-      } else {
-        localStorage.setItem('poll_vote_' + currentPhone, choice);
+      try {
+        await setDoc(
+          doc(db, 'poll', 'responses'),
+          { [currentPhone]: choice },
+          { merge: true }
+        );
         pollStatus.textContent = `Response saved: ${choice}`;
+        await loadPollState();
+      } catch (err) {
+        pollStatus.textContent = 'Could not save to cloud. Check Firestore rules.';
       }
     }
 
@@ -625,10 +583,45 @@
     btnNo.addEventListener('click', () => submitVote('No'));
 
     logoutBtn.addEventListener('click', async () => {
-      if (isFirebaseReady && auth) {
-        await firestoreFns.signOut(auth);
-      }
+      if (auth) await signOut(auth);
       currentPhone = '';
       otpInput.value = '';
       contentView.classList.add('hidden');
-      otpStep.classLis
+      otpStep.classList.add('hidden');
+      phoneStep.classList.remove('hidden');
+      loginView.classList.remove('hidden');
+      hideAlert();
+    });
+
+    // Initialize Firebase & Visible reCAPTCHA safely
+    try {
+      const app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user && ALLOWED_NUMBERS.includes(user.phoneNumber)) {
+          currentPhone = user.phoneNumber;
+          await unlockWebsite();
+        }
+      });
+
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'normal',
+        callback: () => {
+          recaptchaReady = true;
+          hideAlert();
+        },
+        'expired-callback': () => {
+          recaptchaReady = false;
+        }
+      });
+
+      await window.recaptchaVerifier.render();
+      recaptchaReady = true;
+    } catch (initErr) {
+      showAlert('Setup Error: ' + (initErr.code || initErr.message), 'error');
+    }
+  </script>
+</body>
+</html>
