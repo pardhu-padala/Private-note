@@ -5,543 +5,238 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Private Note</title>
   <style>
-    :root {
-      --bg-start: #f4f6fb;
-      --bg-end: #e9eef8;
-      --card-bg: #ffffff;
-      --text-primary: #1e293b;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --border: #e2e8f0;
-      --error: #dc2626;
-      --error-bg: #fef2f2;
-      --success: #16a34a;
-    }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
-      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #f4f6fb, #e9eef8);
+      color: #1e293b;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      line-height: 1.6;
     }
-
-    .container {
+    .card {
       width: 100%;
-      max-width: 460px;
-      background: var(--card-bg);
+      max-width: 450px;
+      background: #fff;
       border-radius: 20px;
       box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-      padding: 32px 26px;
+      padding: 30px 24px;
     }
-
     .hidden { display: none !important; }
-
-    .lock-badge {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: #eff6ff;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
+    .badge {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: #eff6ff; color: #3b82f6;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px; font-size: 22px;
     }
-
-    h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 6px;
+    h1 { font-size: 1.35rem; text-align: center; margin-bottom: 6px; }
+    .sub { font-size: 0.9rem; color: #475569; text-align: center; margin-bottom: 22px; }
+    label { display: block; font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    .row {
+      display: flex; align-items: center;
+      border: 1.5px solid #e2e8f0; border-radius: 12px;
+      overflow: hidden; background: #f8fafc; margin-bottom: 16px;
     }
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      text-align: center;
-      margin-bottom: 24px;
+    .code {
+      padding: 12px 14px; font-weight: 600; background: #f1f5f9;
+      border-right: 1.5px solid #e2e8f0;
     }
-
-    .input-group { margin-bottom: 16px; }
-
-    label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
+    input {
+      width: 100%; border: none; outline: none;
+      padding: 12px 14px; font-size: 1rem; background: transparent;
     }
-
-    .phone-wrapper {
-      display: flex;
-      align-items: center;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #f8fafc;
+    .pin {
+      border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f8fafc;
+      text-align: center; font-size: 1.35rem; font-weight: 700;
+      letter-spacing: 8px; margin-bottom: 16px;
     }
-
-    .phone-wrapper:focus-within {
-      border-color: var(--accent);
-      background: #ffffff;
-    }
-
-    .country-code {
-      padding: 12px 14px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--text-primary);
-      background: #f1f5f9;
-      border-right: 1.5px solid var(--border);
-      user-select: none;
-    }
-
-    input[type="tel"],
-    input[type="password"] {
-      width: 100%;
-      border: none;
-      outline: none;
-      padding: 12px 14px;
-      font-size: 1rem;
-      color: var(--text-primary);
-      background: transparent;
-      letter-spacing: 0.5px;
-    }
-
-    .pin-input {
-      border: 1.5px solid var(--border) !important;
-      border-radius: 12px;
-      background: #f8fafc !important;
-      text-align: center;
-      font-size: 1.35rem !important;
-      font-weight: 700;
-      letter-spacing: 8px !important;
-    }
-
-    .pin-input:focus {
-      border-color: var(--accent) !important;
-      background: #ffffff !important;
-    }
-
     .btn {
-      width: 100%;
-      padding: 13px 18px;
-      border: none;
-      border-radius: 12px;
-      font-size: 0.96rem;
-      font-weight: 600;
-      cursor: pointer;
+      width: 100%; padding: 13px; border: none; border-radius: 12px;
+      background: #3b82f6; color: #fff; font-size: 0.96rem;
+      font-weight: 600; cursor: pointer;
     }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #ffffff;
+    .link {
+      background: none; border: none; color: #3b82f6; font-size: 0.85rem;
+      font-weight: 600; display: block; margin: 14px auto 0; cursor: pointer;
     }
-
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
-
-    .link-btn {
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: block;
-      margin: 14px auto 0;
-    }
-
     .alert {
-      padding: 11px 14px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      margin-bottom: 16px;
-      text-align: center;
-      word-break: break-word;
+      padding: 10px 12px; border-radius: 10px; font-size: 0.85rem;
+      margin-bottom: 14px; text-align: center;
     }
-
-    .alert-error {
-      background: var(--error-bg);
-      color: var(--error);
-      border: 1px solid #fecaca;
+    .err { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .info { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .msg {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px;
+      padding: 18px; margin-bottom: 20px; font-size: 0.95rem; line-height: 1.7;
     }
-
-    .alert-info {
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
+    .poll {
+      border: 1.5px solid #e2e8f0; border-radius: 16px;
+      padding: 18px; margin-bottom: 20px;
     }
-
-    .message-box {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 22px;
+    .poll-q { font-size: 1.06rem; font-weight: 700; margin-bottom: 14px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .opt {
+      padding: 12px; border-radius: 12px; border: 1.5px solid #e2e8f0;
+      background: #f8fafc; font-size: 0.96rem; font-weight: 600; cursor: pointer;
     }
-
-    .message-text {
-      font-size: 0.96rem;
-      color: var(--text-primary);
-      line-height: 1.72;
-      white-space: pre-line;
+    .opt.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+    .status { margin-top: 12px; font-size: 0.84rem; color: #16a34a; text-align: center; font-weight: 500; }
+    .votes {
+      margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e8f0;
+      font-size: 0.82rem; color: #475569; text-align: center; line-height: 1.5;
     }
-
-    .poll-box {
-      border: 1.5px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 22px;
-      background: #ffffff;
-    }
-
-    .poll-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .poll-question {
-      font-size: 1.08rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 16px;
-    }
-
-    .poll-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .poll-btn {
-      padding: 12px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: #f8fafc;
-      color: var(--text-primary);
-      font-size: 0.96rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .poll-btn.selected {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-    }
-
-    .poll-status {
-      margin-top: 12px;
-      font-size: 0.84rem;
-      color: var(--success);
-      font-weight: 500;
-      text-align: center;
-    }
-
-    .saved-votes {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    .insta-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 13px 18px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #ffffff;
-      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-      box-shadow: 0 4px 14px rgba(220, 39, 67, 0.25);
-    }
-
-    .logout-row {
-      margin-top: 18px;
-      text-align: center;
-    }
-
-    .logout-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      cursor: pointer;
-      text-decoration: underline;
+    .insta {
+      display: block; text-align: center; width: 100%; padding: 13px;
+      border-radius: 12px; text-decoration: none; font-weight: 600; color: #fff;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <div id="login-view">
-      <div class="lock-badge">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-      </div>
+  <div class="card">
+    <div id="login">
+      <div class="badge">&#128274;</div>
       <h1>Private Access</h1>
-      <p class="subtitle">Enter your authorized Indian mobile number to continue.</p>
+      <p class="sub">Enter your authorized Indian mobile number to continue.</p>
+      <div id="msgBox" class="alert hidden"></div>
 
-      <div id="alert-box" class="alert hidden"></div>
-
-      <div id="phone-step">
-        <div class="input-group">
-          <label for="phone-input">Mobile Number</label>
-          <div class="phone-wrapper">
-            <span class="country-code">+91</span>
-            <input type="tel" id="phone-input" placeholder="Enter 10-digit number" maxlength="14" autocomplete="tel" />
-          </div>
+      <div id="step1">
+        <label>Mobile Number</label>
+        <div class="row">
+          <span class="code">+91</span>
+          <input type="tel" id="phone" placeholder="Enter 10-digit number" maxlength="14" />
         </div>
-        <button type="button" id="continue-btn" class="btn btn-primary">Continue</button>
+        <button type="button" class="btn" onclick="checkPhone()">Continue</button>
       </div>
 
-      <div id="pin-step" class="hidden">
-        <div class="input-group">
-          <label for="pin-input">Enter 4-Digit Access PIN</label>
-          <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric" />
-        </div>
-        <button type="button" id="verify-pin-btn" class="btn btn-primary">Unlock Page</button>
-        <button type="button" id="change-number-btn" class="link-btn">Change mobile number</button>
+      <div id="step2" class="hidden">
+        <label>Enter 4-Digit Access PIN</label>
+        <input type="password" id="pin" class="pin" placeholder="••••" maxlength="4" inputmode="numeric" />
+        <button type="button" class="btn" onclick="checkPin()">Unlock Page</button>
+        <button type="button" class="link" onclick="resetForm()">Change mobile number</button>
       </div>
     </div>
 
-    <div id="content-view" class="hidden">
-      <div class="message-box">
-        <p class="message-text">Hi....nenu Pardhu telsu kadha...nen mimmalni boyfriend unnada ani adigindhi love cheyyadaaniki kaadhu vere ye uddesham ledhu but u look interesting and I just wanna talk to you for a while...maatlaadamantunnadu maatlaadina tarvatha love chesthunna antaadu ani anukovacchu ala nen cheynu...I like your behaviour in the sense the way you behave like sober and your energy. The way u enjoying. That's all I wanna tell and if you want to do so you can text me back or make a reply of I'm not interested. Sorry endhukante appude meeru chepparu emi workout avvadhu ani appude anukunna endhuku disturb cheyyadam ani malli ippudu msg chesthunna ani thappuga anukokandi this will be the last....seeking for your reply.</p>
-      </div>
+    <div id="content" class="hidden">
+      <div class="msg">Hi....nenu Pardhu telsu kadha...nen mimmalni boyfriend unnada ani adigindhi love cheyyadaaniki kaadhu vere ye uddesham ledhu but u look interesting and I just wanna talk to you for a while...maatlaadamantunnadu maatlaadina tarvatha love chesthunna antaadu ani anukovacchu ala nen cheynu...I like your behaviour in the sense the way you behave like sober and your energy. The way u enjoying. That's all I wanna tell and if you want to do so you can text me back or make a reply of I'm not interested. Sorry endhukante appude meeru chepparu emi workout avvadhu ani appude anukunna endhuku disturb cheyyadam ani malli ippudu msg chesthunna ani thappuga anukokandi this will be the last....seeking for your reply.</div>
 
-      <div class="poll-box">
-        <div class="poll-label">Quick Poll</div>
-        <div class="poll-question">Do you have a boyfriend?</div>
-        <div class="poll-options">
-          <button type="button" class="poll-btn" id="btn-yes">Yes</button>
-          <button type="button" class="poll-btn" id="btn-no">No</button>
+      <div class="poll">
+        <div class="poll-q">Do you have a boyfriend?</div>
+        <div class="grid">
+          <button type="button" class="opt" id="yBtn" onclick="vote('Yes')">Yes</button>
+          <button type="button" class="opt" id="nBtn" onclick="vote('No')">No</button>
         </div>
-        <div id="poll-status" class="poll-status hidden"></div>
-        <div id="saved-votes" class="saved-votes hidden"></div>
+        <div id="pStatus" class="status hidden"></div>
+        <div id="pVotes" class="votes hidden"></div>
       </div>
 
-      <a href="https://www.instagram.com/pardhu__padala?bqrl=MXN0azgzYzdocHFnNw==" target="_blank" rel="noopener noreferrer" class="insta-btn">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-        </svg>
-        Open Instagram (@pardhu__padala)
-      </a>
-
-      <div class="logout-row">
-        <button type="button" id="logout-btn" class="logout-btn">Lock page</button>
-      </div>
+      <a class="insta" href="https://www.instagram.com/pardhu__padala?bqrl=MXN0azgzYzdocHFnNw==" target="_blank" rel="noopener noreferrer">Open Instagram (@pardhu__padala)</a>
+      <button type="button" class="link" onclick="resetForm()">Lock page</button>
     </div>
   </div>
 
   <script>
-    const AUTHORIZED_USERS = {
-      '+919391873289': '4321',
-      '+919912824043': '8765'
-    };
-
-    const firebaseConfig = {
+    var USERS = { '+919391873289': '4321', '+919912824043': '8765' };
+    var CFG = {
       apiKey: "AIzaSyA2f1afEdlY5mATUF_spUSPpNvFrnXJXBc",
       authDomain: "teju-reply.firebaseapp.com",
       projectId: "teju-reply",
       storageBucket: "teju-reply.firebasestorage.app",
       messagingSenderId: "554616281555",
-      appId: "1:554616281555:web:68d8b7df41c4657222f726",
-      measurementId: "G-JY0KX7SGN3"
+      appId: "1:554616281555:web:68d8b7df41c4657222f726"
     };
+    var activeUser = '';
+    var fs = null;
 
-    const loginView = document.getElementById('login-view');
-    const contentView = document.getElementById('content-view');
-    const phoneStep = document.getElementById('phone-step');
-    const pinStep = document.getElementById('pin-step');
-    const alertBox = document.getElementById('alert-box');
-    const phoneInput = document.getElementById('phone-input');
-    const pinInput = document.getElementById('pin-input');
-    const continueBtn = document.getElementById('continue-btn');
-    const verifyPinBtn = document.getElementById('verify-pin-btn');
-    const changeNumberBtn = document.getElementById('change-number-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const btnYes = document.getElementById('btn-yes');
-    const btnNo = document.getElementById('btn-no');
-    const pollStatus = document.getElementById('poll-status');
-    const savedVotesEl = document.getElementById('saved-votes');
-
-    let currentPhone = '';
-    let db = null;
-    let firestoreApi = null;
-
-    function showAlert(msg, type) {
-      alertBox.textContent = msg;
-      alertBox.className = 'alert alert-' + (type || 'error');
-      alertBox.classList.remove('hidden');
+    function showMsg(txt, cls) {
+      var b = document.getElementById('msgBox');
+      b.textContent = txt;
+      b.className = 'alert ' + cls;
     }
 
-    function hideAlert() {
-      alertBox.classList.add('hidden');
-    }
-
-    function normalizeIndianNumber(raw) {
-      const digits = raw.replace(/\D/g, '');
-      if (digits.length === 10) return '+91' + digits;
-      if (digits.length === 12 && digits.startsWith('91')) return '+' + digits;
-      return raw.trim();
-    }
-
-    function handleContinue() {
-      hideAlert();
-      const formatted = normalizeIndianNumber(phoneInput.value);
-
-      if (!AUTHORIZED_USERS[formatted]) {
-        showAlert('Access Denied: This phone number is not authorized to view this page.', 'error');
+    function checkPhone() {
+      var raw = document.getElementById('phone').value.replace(/\D/g, '');
+      var num = raw.length === 10 ? '+91' + raw : (raw.length === 12 ? '+' + raw : '');
+      if (!USERS[num]) {
+        showMsg('Access Denied: Number not authorized.', 'err');
         return;
       }
-
-      currentPhone = formatted;
-      showAlert('Verified number: ' + currentPhone, 'info');
-      phoneStep.classList.add('hidden');
-      pinStep.classList.remove('hidden');
-      pinInput.focus();
+      activeUser = num;
+      showMsg('Verified: ' + num, 'info');
+      document.getElementById('step1').className = 'hidden';
+      document.getElementById('step2').className = '';
     }
 
-    async function handleVerifyPin() {
-      hideAlert();
-      const enteredPin = pinInput.value.trim();
-
-      if (enteredPin !== AUTHORIZED_USERS[currentPhone]) {
-        showAlert('Incorrect PIN. Please check and try again.', 'error');
+    function checkPin() {
+      var p = document.getElementById('pin').value.trim();
+      if (p !== USERS[activeUser]) {
+        showMsg('Incorrect PIN. Try again.', 'err');
         return;
       }
-
-      loginView.classList.add('hidden');
-      contentView.classList.remove('hidden');
-      await ensureFirebase();
-      await loadPollState();
+      document.getElementById('login').className = 'hidden';
+      document.getElementById('content').className = '';
+      initDb();
     }
 
-    continueBtn.addEventListener('click', handleContinue);
-    phoneInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') handleContinue();
-    });
+    function resetForm() {
+      activeUser = '';
+      document.getElementById('pin').value = '';
+      document.getElementById('msgBox').className = 'alert hidden';
+      document.getElementById('content').className = 'hidden';
+      document.getElementById('step2').className = 'hidden';
+      document.getElementById('step1').className = '';
+      document.getElementById('login').className = '';
+    }
 
-    verifyPinBtn.addEventListener('click', handleVerifyPin);
-    pinInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') handleVerifyPin();
-    });
-
-    changeNumberBtn.addEventListener('click', function () {
-      hideAlert();
-      pinInput.value = '';
-      pinStep.classList.add('hidden');
-      phoneStep.classList.remove('hidden');
-    });
-
-    async function ensureFirebase() {
-      if (db && firestoreApi) return true;
-      try {
-        const appMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-        const authMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-        const fsMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-
-        const app = appMod.initializeApp(firebaseConfig);
-        const auth = authMod.getAuth(app);
-        db = fsMod.getFirestore(app);
-        firestoreApi = { doc: fsMod.doc, setDoc: fsMod.setDoc, getDoc: fsMod.getDoc };
-
+    async function initDb() {
+      if (!fs) {
         try {
-          await authMod.signInAnonymously(auth);
-        } catch (authErr) {}
-        return true;
-      } catch (err) {
-        return false;
+          var a = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+          var u = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+          var f = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+          var app = a.initializeApp(CFG);
+          try { await u.signInAnonymously(u.getAuth(app)); } catch (e) {}
+          fs = { db: f.getFirestore(app), doc: f.doc, setDoc: f.setDoc, getDoc: f.getDoc };
+        } catch (e) { return; }
       }
-    }
-
-    function highlightChoice(choice) {
-      btnYes.classList.toggle('selected', choice === 'Yes');
-      btnNo.classList.toggle('selected', choice === 'No');
-    }
-
-    async function loadPollState() {
-      if (!db || !firestoreApi) return;
       try {
-        const snap = await firestoreApi.getDoc(firestoreApi.doc(db, 'poll', 'responses'));
+        var snap = await fs.getDoc(fs.doc(fs.db, 'poll', 'responses'));
         if (snap.exists()) {
-          const data = snap.data();
-          if (data[currentPhone]) {
-            highlightChoice(data[currentPhone]);
-            pollStatus.textContent = 'Your recorded answer: ' + data[currentPhone];
-            pollStatus.classList.remove('hidden');
-          }
-          const entries = Object.entries(data);
-          if (entries.length > 0) {
-            savedVotesEl.innerHTML = '<strong>Recorded responses:</strong><br>' +
-              entries.map(function (pair) { return pair[0] + ': <strong>' + pair[1] + '</strong>'; }).join('<br>');
-            savedVotesEl.classList.remove('hidden');
+          var d = snap.data();
+          if (d[activeUser]) mark(d[activeUser]);
+          var list = Object.entries(d);
+          if (list.length) {
+            var v = document.getElementById('pVotes');
+            v.innerHTML = '<strong>Recorded responses:</strong><br>' + list.map(function(x){ return x[0] + ': <strong>' + x[1] + '</strong>'; }).join('<br>');
+            v.className = 'votes';
           }
         }
       } catch (e) {}
     }
 
-    async function submitVote(choice) {
-      highlightChoice(choice);
-      pollStatus.textContent = 'Saving "' + choice + '"...';
-      pollStatus.classList.remove('hidden');
-
-      const ok = await ensureFirebase();
-      if (!ok || !db) {
-        pollStatus.textContent = 'Response selected: ' + choice;
-        return;
-      }
-
-      try {
-        await firestoreApi.setDoc(
-          firestoreApi.doc(db, 'poll', 'responses'),
-          { [currentPhone]: choice },
-          { merge: true }
-        );
-        pollStatus.textContent = 'Response saved: ' + choice;
-        await loadPollState();
-      } catch (err) {
-        pollStatus.textContent = 'Enable "Anonymous" sign-in & update Firestore rules in Firebase to save votes.';
-      }
+    function mark(c) {
+      document.getElementById('yBtn').className = c === 'Yes' ? 'opt active' : 'opt';
+      document.getElementById('nBtn').className = c === 'No' ? 'opt active' : 'opt';
     }
 
-    btnYes.addEventListener('click', function () { submitVote('Yes'); });
-    btnNo.addEventListener('click', function () { submitVote('No'); });
-
-    logoutBtn.addEventListener('click', function () {
-      currentPhone = '';
-      pinInput.value = '';
-      contentView.classList.add('hidden');
-      pinStep.classList.add('hidden');
-      phoneStep.classList.remove('hidden');
-      loginView.classList.remove('hidden');
-      hideAlert();
-    });
+    async function vote(c) {
+      mark(c);
+      var s = document.getElementById('pStatus');
+      s.textContent = 'Saving...';
+      s.className = 'status';
+      if (!fs) await initDb();
+      if (!fs) { s.textContent = 'Selected: ' + c; return; }
+      try {
+        var payload = {}; payload[activeUser] = c;
+        await fs.setDoc(fs.doc(fs.db, 'poll', 'responses'), payload, { merge: true });
+        s.textContent = 'Response saved: ' + c;
+        initDb();
+      } catch (e) {
+        s.textContent = 'Enable Anonymous sign-in & Firestore rules in Firebase to save.';
+      }
+    }
   </script>
 </body>
 </html>
