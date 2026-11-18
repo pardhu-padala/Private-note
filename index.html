@@ -20,11 +20,7 @@
       --success: #16a34a;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -45,12 +41,9 @@
       border-radius: 20px;
       box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
       padding: 32px 26px;
-      transition: all 0.3s ease;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     .lock-badge {
       width: 48px;
@@ -78,9 +71,7 @@
       margin-bottom: 24px;
     }
 
-    .input-group {
-      margin-bottom: 16px;
-    }
+    .input-group { margin-bottom: 16px; }
 
     label {
       display: block;
@@ -97,7 +88,6 @@
       border-radius: 12px;
       overflow: hidden;
       background: #f8fafc;
-      transition: border-color 0.2s;
     }
 
     .phone-wrapper:focus-within {
@@ -150,11 +140,6 @@
       font-size: 0.96rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-
-    .btn:active {
-      transform: scale(0.99);
     }
 
     .btn-primary {
@@ -162,14 +147,8 @@
       color: #ffffff;
     }
 
-    .btn-primary:hover {
-      background: var(--accent-hover);
-    }
-
-    .btn-primary:disabled {
-      background: #93c5fd;
-      cursor: not-allowed;
-    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
 
     .link-btn {
       background: none;
@@ -257,12 +236,6 @@
       font-size: 0.96rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .poll-btn:hover {
-      border-color: var(--accent);
-      background: #eff6ff;
     }
 
     .poll-btn.selected {
@@ -303,15 +276,6 @@
       color: #ffffff;
       background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
       box-shadow: 0 4px 14px rgba(220, 39, 67, 0.25);
-      transition: opacity 0.2s, transform 0.1s;
-    }
-
-    .insta-btn:hover {
-      opacity: 0.94;
-    }
-
-    .insta-btn:active {
-      transform: scale(0.99);
     }
 
     .logout-row {
@@ -332,7 +296,6 @@
 <body>
 
   <div class="container">
-    <!-- STEP 1: PHONE + PIN LOGIN -->
     <div id="login-view">
       <div class="lock-badge">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -345,7 +308,6 @@
 
       <div id="alert-box" class="alert hidden"></div>
 
-      <!-- Phone Number Step -->
       <div id="phone-step">
         <div class="input-group">
           <label for="phone-input">Mobile Number</label>
@@ -357,7 +319,6 @@
         <button type="button" id="continue-btn" class="btn btn-primary">Continue</button>
       </div>
 
-      <!-- Access PIN Verification Step -->
       <div id="pin-step" class="hidden">
         <div class="input-group">
           <label for="pin-input">Enter 4-Digit Access PIN</label>
@@ -368,13 +329,11 @@
       </div>
     </div>
 
-    <!-- STEP 2: PROTECTED CONTENT -->
     <div id="content-view" class="hidden">
       <div class="message-box">
         <p class="message-text">Hi....nenu Pardhu telsu kadha...nen mimmalni boyfriend unnada ani adigindhi love cheyyadaaniki kaadhu vere ye uddesham ledhu but u look interesting and I just wanna talk to you for a while...maatlaadamantunnadu maatlaadina tarvatha love chesthunna antaadu ani anukovacchu ala nen cheynu...I like your behaviour in the sense the way you behave like sober and your energy. The way u enjoying. That's all I wanna tell and if you want to do so you can text me back or make a reply of I'm not interested. Sorry endhukante appude meeru chepparu emi workout avvadhu ani appude anukunna endhuku disturb cheyyadam ani malli ippudu msg chesthunna ani thappuga anukokandi this will be the last....seeking for your reply.</p>
       </div>
 
-      <!-- Poll Box -->
       <div class="poll-box">
         <div class="poll-label">Quick Poll</div>
         <div class="poll-question">Do you have a boyfriend?</div>
@@ -386,8 +345,203 @@
         <div id="saved-votes" class="saved-votes hidden"></div>
       </div>
 
-      <!-- Instagram Profile Button -->
       <a href="https://www.instagram.com/pardhu__padala?bqrl=MXN0azgzYzdocHFnNw==" target="_blank" rel="noopener noreferrer" class="insta-btn">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645
-            
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+        Open Instagram (@pardhu__padala)
+      </a>
+
+      <div class="logout-row">
+        <button type="button" id="logout-btn" class="logout-btn">Lock page</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const AUTHORIZED_USERS = {
+      '+919391873289': '4321',
+      '+919912824043': '8765'
+    };
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2f1afEdlY5mATUF_spUSPpNvFrnXJXBc",
+      authDomain: "teju-reply.firebaseapp.com",
+      projectId: "teju-reply",
+      storageBucket: "teju-reply.firebasestorage.app",
+      messagingSenderId: "554616281555",
+      appId: "1:554616281555:web:68d8b7df41c4657222f726",
+      measurementId: "G-JY0KX7SGN3"
+    };
+
+    const loginView = document.getElementById('login-view');
+    const contentView = document.getElementById('content-view');
+    const phoneStep = document.getElementById('phone-step');
+    const pinStep = document.getElementById('pin-step');
+    const alertBox = document.getElementById('alert-box');
+    const phoneInput = document.getElementById('phone-input');
+    const pinInput = document.getElementById('pin-input');
+    const continueBtn = document.getElementById('continue-btn');
+    const verifyPinBtn = document.getElementById('verify-pin-btn');
+    const changeNumberBtn = document.getElementById('change-number-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const btnYes = document.getElementById('btn-yes');
+    const btnNo = document.getElementById('btn-no');
+    const pollStatus = document.getElementById('poll-status');
+    const savedVotesEl = document.getElementById('saved-votes');
+
+    let currentPhone = '';
+    let db = null;
+    let firestoreApi = null;
+
+    function showAlert(msg, type) {
+      alertBox.textContent = msg;
+      alertBox.className = 'alert alert-' + (type || 'error');
+      alertBox.classList.remove('hidden');
+    }
+
+    function hideAlert() {
+      alertBox.classList.add('hidden');
+    }
+
+    function normalizeIndianNumber(raw) {
+      const digits = raw.replace(/\D/g, '');
+      if (digits.length === 10) return '+91' + digits;
+      if (digits.length === 12 && digits.startsWith('91')) return '+' + digits;
+      return raw.trim();
+    }
+
+    function handleContinue() {
+      hideAlert();
+      const formatted = normalizeIndianNumber(phoneInput.value);
+
+      if (!AUTHORIZED_USERS[formatted]) {
+        showAlert('Access Denied: This phone number is not authorized to view this page.', 'error');
+        return;
+      }
+
+      currentPhone = formatted;
+      showAlert('Verified number: ' + currentPhone, 'info');
+      phoneStep.classList.add('hidden');
+      pinStep.classList.remove('hidden');
+      pinInput.focus();
+    }
+
+    async function handleVerifyPin() {
+      hideAlert();
+      const enteredPin = pinInput.value.trim();
+
+      if (enteredPin !== AUTHORIZED_USERS[currentPhone]) {
+        showAlert('Incorrect PIN. Please check and try again.', 'error');
+        return;
+      }
+
+      loginView.classList.add('hidden');
+      contentView.classList.remove('hidden');
+      await ensureFirebase();
+      await loadPollState();
+    }
+
+    continueBtn.addEventListener('click', handleContinue);
+    phoneInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') handleContinue();
+    });
+
+    verifyPinBtn.addEventListener('click', handleVerifyPin);
+    pinInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') handleVerifyPin();
+    });
+
+    changeNumberBtn.addEventListener('click', function () {
+      hideAlert();
+      pinInput.value = '';
+      pinStep.classList.add('hidden');
+      phoneStep.classList.remove('hidden');
+    });
+
+    async function ensureFirebase() {
+      if (db && firestoreApi) return true;
+      try {
+        const appMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+        const authMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+        const fsMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+        const app = appMod.initializeApp(firebaseConfig);
+        const auth = authMod.getAuth(app);
+        db = fsMod.getFirestore(app);
+        firestoreApi = { doc: fsMod.doc, setDoc: fsMod.setDoc, getDoc: fsMod.getDoc };
+
+        try {
+          await authMod.signInAnonymously(auth);
+        } catch (authErr) {}
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function highlightChoice(choice) {
+      btnYes.classList.toggle('selected', choice === 'Yes');
+      btnNo.classList.toggle('selected', choice === 'No');
+    }
+
+    async function loadPollState() {
+      if (!db || !firestoreApi) return;
+      try {
+        const snap = await firestoreApi.getDoc(firestoreApi.doc(db, 'poll', 'responses'));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data[currentPhone]) {
+            highlightChoice(data[currentPhone]);
+            pollStatus.textContent = 'Your recorded answer: ' + data[currentPhone];
+            pollStatus.classList.remove('hidden');
+          }
+          const entries = Object.entries(data);
+          if (entries.length > 0) {
+            savedVotesEl.innerHTML = '<strong>Recorded responses:</strong><br>' +
+              entries.map(function (pair) { return pair[0] + ': <strong>' + pair[1] + '</strong>'; }).join('<br>');
+            savedVotesEl.classList.remove('hidden');
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function submitVote(choice) {
+      highlightChoice(choice);
+      pollStatus.textContent = 'Saving "' + choice + '"...';
+      pollStatus.classList.remove('hidden');
+
+      const ok = await ensureFirebase();
+      if (!ok || !db) {
+        pollStatus.textContent = 'Response selected: ' + choice;
+        return;
+      }
+
+      try {
+        await firestoreApi.setDoc(
+          firestoreApi.doc(db, 'poll', 'responses'),
+          { [currentPhone]: choice },
+          { merge: true }
+        );
+        pollStatus.textContent = 'Response saved: ' + choice;
+        await loadPollState();
+      } catch (err) {
+        pollStatus.textContent = 'Enable "Anonymous" sign-in & update Firestore rules in Firebase to save votes.';
+      }
+    }
+
+    btnYes.addEventListener('click', function () { submitVote('Yes'); });
+    btnNo.addEventListener('click', function () { submitVote('No'); });
+
+    logoutBtn.addEventListener('click', function () {
+      currentPhone = '';
+      pinInput.value = '';
+      contentView.classList.add('hidden');
+      pinStep.classList.add('hidden');
+      phoneStep.classList.remove('hidden');
+      loginView.classList.remove('hidden');
+      hideAlert();
+    });
+  </script>
+</body>
+</html>
