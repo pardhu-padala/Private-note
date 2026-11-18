@@ -116,7 +116,7 @@
     }
 
     input[type="tel"],
-    input[type="text"] {
+    input[type="password"] {
       width: 100%;
       border: none;
       outline: none;
@@ -127,26 +127,19 @@
       letter-spacing: 0.5px;
     }
 
-    .otp-input {
+    .pin-input {
       border: 1.5px solid var(--border) !important;
       border-radius: 12px;
       background: #f8fafc !important;
       text-align: center;
-      font-size: 1.25rem !important;
+      font-size: 1.35rem !important;
       font-weight: 700;
-      letter-spacing: 6px !important;
+      letter-spacing: 8px !important;
     }
 
-    .otp-input:focus {
+    .pin-input:focus {
       border-color: var(--accent) !important;
       background: #ffffff !important;
-    }
-
-    #recaptcha-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 16px;
-      min-height: 78px;
     }
 
     .btn {
@@ -339,7 +332,7 @@
 <body>
 
   <div class="container">
-    <!-- STEP 1: PHONE LOGIN -->
+    <!-- STEP 1: PHONE + PIN LOGIN -->
     <div id="login-view">
       <div class="lock-badge">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -348,7 +341,7 @@
         </svg>
       </div>
       <h1>Private Access</h1>
-      <p class="subtitle">Enter your authorized Indian mobile number to receive an OTP.</p>
+      <p class="subtitle">Enter your authorized Indian mobile number to continue.</p>
 
       <div id="alert-box" class="alert hidden"></div>
 
@@ -361,17 +354,16 @@
             <input type="tel" id="phone-input" placeholder="Enter 10-digit number" maxlength="14" autocomplete="tel" />
           </div>
         </div>
-        <div id="recaptcha-container"></div>
-        <button type="button" id="send-otp-btn" class="btn btn-primary">Send OTP</button>
+        <button type="button" id="continue-btn" class="btn btn-primary">Continue</button>
       </div>
 
-      <!-- OTP Verification Step -->
-      <div id="otp-step" class="hidden">
+      <!-- Access PIN Verification Step -->
+      <div id="pin-step" class="hidden">
         <div class="input-group">
-          <label for="otp-input">Enter 6-Digit OTP</label>
-          <input type="text" id="otp-input" class="otp-input" placeholder="••••••" maxlength="6" inputmode="numeric" />
+          <label for="pin-input">Enter 4-Digit Access PIN</label>
+          <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric" />
         </div>
-        <button type="button" id="verify-otp-btn" class="btn btn-primary">Verify & Open</button>
+        <button type="button" id="verify-pin-btn" class="btn btn-primary">Unlock Page</button>
         <button type="button" id="change-number-btn" class="link-btn">Change mobile number</button>
       </div>
     </div>
@@ -397,231 +389,5 @@
       <!-- Instagram Profile Button -->
       <a href="https://www.instagram.com/pardhu__padala?bqrl=MXN0azgzYzdocHFnNw==" target="_blank" rel="noopener noreferrer" class="insta-btn">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-        </svg>
-        Open Instagram (@pardhu__padala)
-      </a>
-
-      <div class="logout-row">
-        <button type="button" id="logout-btn" class="logout-btn">Lock page</button>
-      </div>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-    const ALLOWED_NUMBERS = ['+919391873289', '+919912824043'];
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyA2f1afEdlY5mATUF_spUSPpNvFrnXJXBc",
-      authDomain: "teju-reply.firebaseapp.com",
-      projectId: "teju-reply",
-      storageBucket: "teju-reply.firebasestorage.app",
-      messagingSenderId: "554616281555",
-      appId: "1:554616281555:web:68d8b7df41c4657222f726",
-      measurementId: "G-JY0KX7SGN3"
-    };
-
-    const loginView = document.getElementById('login-view');
-    const contentView = document.getElementById('content-view');
-    const phoneStep = document.getElementById('phone-step');
-    const otpStep = document.getElementById('otp-step');
-    const alertBox = document.getElementById('alert-box');
-    const phoneInput = document.getElementById('phone-input');
-    const otpInput = document.getElementById('otp-input');
-    const sendOtpBtn = document.getElementById('send-otp-btn');
-    const verifyOtpBtn = document.getElementById('verify-otp-btn');
-    const changeNumberBtn = document.getElementById('change-number-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const btnYes = document.getElementById('btn-yes');
-    const btnNo = document.getElementById('btn-no');
-    const pollStatus = document.getElementById('poll-status');
-    const savedVotesEl = document.getElementById('saved-votes');
-
-    let currentPhone = '';
-    let confirmationResult = null;
-    let auth = null;
-    let db = null;
-    let recaptchaReady = false;
-
-    function showAlert(msg, type = 'error') {
-      alertBox.textContent = msg;
-      alertBox.className = `alert alert-${type}`;
-      alertBox.classList.remove('hidden');
-    }
-
-    function hideAlert() {
-      alertBox.classList.add('hidden');
-    }
-
-    function normalizeIndianNumber(raw) {
-      const digits = raw.replace(/\D/g, '');
-      if (digits.length === 10) return '+91' + digits;
-      if (digits.length === 12 && digits.startsWith('91')) return '+' + digits;
-      return raw.trim();
-    }
-
-    // Attach all button listeners immediately
-    sendOtpBtn.addEventListener('click', async () => {
-      hideAlert();
-      const formatted = normalizeIndianNumber(phoneInput.value);
-
-      if (!ALLOWED_NUMBERS.includes(formatted)) {
-        showAlert('Access Denied: This phone number is not authorized to view this page.', 'error');
-        return;
-      }
-
-      if (!auth || !recaptchaReady) {
-        showAlert('Security check is still loading or blocked. Check that pardhu-padala.github.io is added to Firebase Authorized Domains, then refresh.', 'error');
-        return;
-      }
-
-      currentPhone = formatted;
-      sendOtpBtn.disabled = true;
-      sendOtpBtn.textContent = 'Sending OTP...';
-
-      try {
-        confirmationResult = await signInWithPhoneNumber(auth, currentPhone, window.recaptchaVerifier);
-        showAlert(`OTP sent via SMS to ${currentPhone}`, 'info');
-        phoneStep.classList.add('hidden');
-        otpStep.classList.remove('hidden');
-        otpInput.focus();
-      } catch (err) {
-        showAlert('OTP Error: ' + (err.code || err.message || 'Could not send OTP.'), 'error');
-      } finally {
-        sendOtpBtn.disabled = false;
-        sendOtpBtn.textContent = 'Send OTP';
-      }
-    });
-
-    verifyOtpBtn.addEventListener('click', async () => {
-      hideAlert();
-      const code = otpInput.value.trim();
-
-      if (code.length !== 6) {
-        showAlert('Please enter the 6-digit OTP.', 'error');
-        return;
-      }
-
-      verifyOtpBtn.disabled = true;
-      verifyOtpBtn.textContent = 'Verifying...';
-
-      try {
-        await confirmationResult.confirm(code);
-        await unlockWebsite();
-      } catch (err) {
-        showAlert('Incorrect OTP. Please check and try again.', 'error');
-      } finally {
-        verifyOtpBtn.disabled = false;
-        verifyOtpBtn.textContent = 'Verify & Open';
-      }
-    });
-
-    changeNumberBtn.addEventListener('click', () => {
-      hideAlert();
-      otpInput.value = '';
-      otpStep.classList.add('hidden');
-      phoneStep.classList.remove('hidden');
-    });
-
-    async function unlockWebsite() {
-      loginView.classList.add('hidden');
-      contentView.classList.remove('hidden');
-      await loadPollState();
-    }
-
-    function highlightChoice(choice) {
-      btnYes.classList.toggle('selected', choice === 'Yes');
-      btnNo.classList.toggle('selected', choice === 'No');
-    }
-
-    async function loadPollState() {
-      if (!db) return;
-      try {
-        const snap = await getDoc(doc(db, 'poll', 'responses'));
-        if (snap.exists()) {
-          const data = snap.data();
-          if (data[currentPhone]) {
-            highlightChoice(data[currentPhone]);
-            pollStatus.textContent = `Your recorded answer: ${data[currentPhone]}`;
-            pollStatus.classList.remove('hidden');
-          }
-          const entries = Object.entries(data);
-          if (entries.length > 0) {
-            savedVotesEl.innerHTML = '<strong>Recorded responses:</strong><br>' +
-              entries.map(([num, ans]) => `${num}: <strong>${ans}</strong>`).join('<br>');
-            savedVotesEl.classList.remove('hidden');
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    async function submitVote(choice) {
-      highlightChoice(choice);
-      pollStatus.textContent = `Saving "${choice}"...`;
-      pollStatus.classList.remove('hidden');
-
-      try {
-        await setDoc(
-          doc(db, 'poll', 'responses'),
-          { [currentPhone]: choice },
-          { merge: true }
-        );
-        pollStatus.textContent = `Response saved: ${choice}`;
-        await loadPollState();
-      } catch (err) {
-        pollStatus.textContent = 'Could not save to cloud. Check Firestore rules.';
-      }
-    }
-
-    btnYes.addEventListener('click', () => submitVote('Yes'));
-    btnNo.addEventListener('click', () => submitVote('No'));
-
-    logoutBtn.addEventListener('click', async () => {
-      if (auth) await signOut(auth);
-      currentPhone = '';
-      otpInput.value = '';
-      contentView.classList.add('hidden');
-      otpStep.classList.add('hidden');
-      phoneStep.classList.remove('hidden');
-      loginView.classList.remove('hidden');
-      hideAlert();
-    });
-
-    // Initialize Firebase & Visible reCAPTCHA safely
-    try {
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
-
-      onAuthStateChanged(auth, async (user) => {
-        if (user && ALLOWED_NUMBERS.includes(user.phoneNumber)) {
-          currentPhone = user.phoneNumber;
-          await unlockWebsite();
-        }
-      });
-
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'normal',
-        callback: () => {
-          recaptchaReady = true;
-          hideAlert();
-        },
-        'expired-callback': () => {
-          recaptchaReady = false;
-        }
-      });
-
-      await window.recaptchaVerifier.render();
-      recaptchaReady = true;
-    } catch (initErr) {
-      showAlert('Setup Error: ' + (initErr.code || initErr.message), 'error');
-    }
-  </script>
-</body>
-</html>
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645
+            
